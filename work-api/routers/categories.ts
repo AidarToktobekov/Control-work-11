@@ -13,6 +13,15 @@ categoriesRouter.get('/', async (req, res, next) => {
   }
 });
 
+categoriesRouter.get('/:id', async (req, res, next) => {
+  try {
+    const category = await Category.findById(req.params.id);
+    return res.send(category);
+  } catch (e) {
+    return next(e);
+  }
+});
+
 categoriesRouter.post('/', async (req, res, next) => {
   try {
     const categoryData = {

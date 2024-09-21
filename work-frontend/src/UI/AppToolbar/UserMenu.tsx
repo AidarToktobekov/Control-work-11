@@ -1,12 +1,21 @@
 import React, { useState } from 'react';
 import { User } from '../../types';
-import  { Button, Menu, MenuItem } from '@mui/material';
+import  { Button, Menu, MenuItem, styled } from '@mui/material';
 import { useAppDispatch } from '../../app/hooks';
-import { logout } from '../../features/usersThunk';
+import { logout } from '../../features/users/usersThunk';
+import { Link } from 'react-router-dom';
 
 interface Props {
   user: User;
 }
+
+const StyledLink = styled(Link)({
+  color: 'inherit',
+  textDecoration: 'none',
+  '&:hover': {
+    color: 'inherit',
+  },
+});
 
 const UserMenu: React.FC<Props> = ({ user }) => {
   const dispatch = useAppDispatch();
@@ -27,6 +36,7 @@ const UserMenu: React.FC<Props> = ({ user }) => {
 
   return (
         <>
+        <StyledLink to="/new-product">New Product</StyledLink>
         <Button onClick={handleClick} color="inherit">
             Hello, {user.username}!
         </Button>

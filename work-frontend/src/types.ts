@@ -1,6 +1,8 @@
 export interface RegisterMutation {
     username: string;
     password: string;
+    displayName: string;
+    phoneNumber: string;
 }
 
 export interface LoginMutation {
@@ -28,4 +30,20 @@ export interface ValidationError {
 
 export interface GlobalError {
     error: string;
+}
+
+
+export interface IProduct{
+    _id: string;
+    idUser: string;
+    category: string;
+    title: string;
+    description: string;
+    price: number;
+    image: string | null;
+}
+  
+export interface Category{
+    title: string;
+    _id: string;
 }

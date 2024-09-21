@@ -8,20 +8,26 @@ import auth, { RequestWithUser } from '../middleware/auth';
 const productsRouter = express.Router();
 
 productsRouter.get('/', async(req, res, next)=>{
-    try{
-        const products = await Product.find();
+    try {
+        const filter: Record<string, unknown> = {};
+    
+        if (req.query.category) {
+          filter.category = req.query.category;
+        }
+    
+        const products = await Product.find(filter).populate('category', 'title');
         return res.send(products);
-    }catch(e){
-        next(e);
-    }
+      } catch (error) {
+        next(error);
+      }
 });
 
 productsRouter.get('/:id', async(req, res, next)=>{
-    try{
-        const products = await Product.find({category: req.params.id});
-        return res.send(products);
-    }catch(e){
-        next(e);
+  try {
+      const product = await Product.findById(req.params.id);
+      return res.send(product);
+    } catch (error) {
+      next(error);
     }
 });
 
