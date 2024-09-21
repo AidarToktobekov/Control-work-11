@@ -31,7 +31,7 @@ const NewProduct = ()=>{
     });
 
     const submitFormHandler = (event: React.FormEvent) => {
-        event.preventDefault();
+        event.preventDefault();        
         dispatch(productCreate(state));
         navigate('/');
     };

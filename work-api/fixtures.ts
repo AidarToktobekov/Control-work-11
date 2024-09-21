@@ -10,6 +10,7 @@ const run = async () => {
 
   try {
     await db.dropCollection('users');
+    await db.dropCollection('categories');
     await db.dropCollection('products');
   } catch (e) {
     console.log('Skipping drop...');
@@ -27,9 +28,11 @@ const run = async () => {
     phoneNumber: '54213213213',
     password: '123',
   })
-
+  
   firstUser.generateToken();
   secondUser.generateToken();
+  await firstUser.save();
+  await secondUser.save();
   
   const [category1, category2, category3] = await Category.create(
     {
@@ -67,8 +70,6 @@ const run = async () => {
   )
   
   await db.close();
-  await firstUser.save();
-  await secondUser.save();
 };
 
 run().catch(console.error);
