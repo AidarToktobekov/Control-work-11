@@ -1,13 +1,14 @@
 import { useEffect } from "react";
-import { useParams } from "react-router-dom";
-import { productFetch } from "./productThunk";
+import { useNavigate, useParams } from "react-router-dom";
+import { productDelete, productFetch, productOwnerFetch } from "./productThunk";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { selectProduct, selectProductLoading } from "./productsSlice";
+import { selectOwner, selectOwnerLoading, selectProduct, selectProductLoading } from "./productsSlice";
 import imageNotFound from '../../assets/images/image-not-found.png';
-import { CardMedia, CircularProgress, Grid2, styled, Typography } from "@mui/material";
+import { Button, CardMedia, CircularProgress, Grid2, styled, Typography } from "@mui/material";
 import { API_URL } from "../../constants";
 import { fetchCategory } from "../categories/categoriesThunk";
 import { selectCategory, selectCategoryFetching } from "../categories/categoriesSlice";
+import { selectUser } from "../users/usersSlice";
 
 const ImageCardMedia = styled(CardMedia)({
     height: 0,
@@ -22,10 +23,19 @@ const OneProducts = ()=>{
     const productLoading = useAppSelector(selectProductLoading);
     const category = useAppSelector(selectCategory);
     const categoryLoading = useAppSelector(selectCategoryFetching);
+    const owner = useAppSelector(selectOwner);
+    const ownerLoading = useAppSelector(selectOwnerLoading);
     let cardImage = imageNotFound;
+    const user = useAppSelector(selectUser);
+    const navigate = useNavigate();
 
     if (product?.image) {
         cardImage = `${API_URL}/${product?.image}`;
+    }
+
+    const onDelete = ()=>{
+        dispatch(productDelete(id));
+        navigate('/')
     }
 
     useEffect(()=>{
@@ -33,9 +43,8 @@ const OneProducts = ()=>{
     }, [dispatch]);
 
     useEffect(()=>{
-        console.log('yes');
-        
         dispatch(fetchCategory(product?.category));
+        dispatch(productOwnerFetch(product?.idUser));
     }, [dispatch, product])
 
     return(
@@ -67,6 +76,24 @@ const OneProducts = ()=>{
                             <Typography variant="h5">
                                 {product?.price}$
                             </Typography>
+                        </Grid2>
+                        <Grid2 marginLeft='auto' display='flex' flexDirection='column' justifyContent='space-between'>
+                                {ownerLoading ? (
+                                    <CircularProgress/>
+                                ):(
+                                    <>
+                                    <Typography variant="h5">
+                                        {owner?.name} | {owner?.phone}
+                                    </Typography>   
+                                    {user?._id !== product?.idUser ? (
+                                        null
+                                    ): (
+                                        <Button onClick={onDelete} variant="contained">
+                                            Delete product
+                                        </Button>
+                                    )}
+                                    </>
+                                )}
                         </Grid2>
                     </Grid2>
                 )}
