@@ -1,19 +1,28 @@
-import { Model } from 'mongoose';
+import { Model, ObjectId } from 'mongoose';
 
 export interface UserFields {
     username: string;
     password: string;
+    displayName: string;
+    phoneNumber: string;
     token: string;
-    __confirmPassword: string;
   }
-  
-  export interface UserVirtuals {
-    confirmPassword: string;
-  }
-  
+
   export interface UserMethods {
     checkPassword(password: string): Promise<boolean>;
     generateToken(): void;
   }
   
-  export type UserModel = Model<UserFields, {}, UserMethods, UserVirtuals>;
+  export type UserModel = Model<UserFields, {}, UserMethods>;
+
+export interface IProduct{
+  _id: ObjectId;
+  idUser: ObjectId;
+  category: ObjectId;
+  title: string;
+  description: string;
+  price: number;
+  image: string | null;
+}
+
+export type ProductMutation = Omit<IProduct, '_id'>
