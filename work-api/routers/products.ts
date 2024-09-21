@@ -42,7 +42,7 @@ productsRouter.post('/',  auth, imagesUpload.single('image'), async (req, res, n
             image: req.file ? req.file.filename : null,
             idUser: user?._id,  
         };
-    
+
         const product = new Product(productMutation);
         await product.save();
     

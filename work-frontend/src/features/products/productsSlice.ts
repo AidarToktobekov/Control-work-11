@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { IProduct } from "../../types";
-import { productDelete, productFetch, productOwnerFetch, productsFetch } from "./productThunk";
+import { productCreate, productDelete, productFetch, productOwnerFetch, productsFetch } from "./productThunk";
 
 
 interface ProductState{
@@ -11,6 +11,7 @@ interface ProductState{
     productOwner: {name: string, phone: string} | null; 
     productOwnerLoading: boolean;
     deleteLoading: boolean;
+    formLoading: boolean;
 }
 
 const initialState: ProductState = {
@@ -21,6 +22,7 @@ const initialState: ProductState = {
     productOwner: null,
     productOwnerLoading: false,
     deleteLoading: false,
+    formLoading: false,
 }
 
 const productsSlice = createSlice({
@@ -68,6 +70,15 @@ const productsSlice = createSlice({
             .addCase(productDelete.rejected, (state)=>{
                 state.deleteLoading = false;
             })
+            .addCase(productCreate.pending, (state)=>{
+                state.formLoading = true;
+            })
+            .addCase(productCreate.fulfilled, (state)=>{
+                state.formLoading = false;
+            })
+            .addCase(productCreate.rejected, (state)=>{
+                state.formLoading = false;
+            })
     },
     selectors: {
         selectProducts: (state)=>state.products,
@@ -76,9 +87,10 @@ const productsSlice = createSlice({
         selectProduct: (state)=>state.product,
         selectOwnerLoading: (state)=>state.productOwnerLoading,
         selectOwner: (state)=>state.productOwner,
+        selectFormLoading: (state)=>state.formLoading,
     },
 });
 
 export const productsReducer = productsSlice.reducer;
 
-export const { selectProducts, selectProductsLoading, selectProductLoading, selectProduct, selectOwnerLoading, selectOwner} = productsSlice.selectors;
+export const { selectProducts, selectProductsLoading, selectProductLoading, selectProduct, selectOwnerLoading, selectOwner, selectFormLoading} = productsSlice.selectors;

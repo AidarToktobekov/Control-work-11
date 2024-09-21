@@ -43,6 +43,14 @@ export interface IProduct{
     image: string | null;
 }
   
+export interface ProductMutation{
+    category: string;
+    title: string;
+    description: string;
+    price: string;
+    image: string | null;
+}
+
 export interface Category{
     title: string;
     _id: string;

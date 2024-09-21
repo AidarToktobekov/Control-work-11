@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { IProduct } from "../../types";
+import { IProduct, ProductMutation } from "../../types";
 import axiosApi from "../../axiosApi";
 import { RootState } from "../../app/store";
 
@@ -20,6 +20,21 @@ export const productFetch = createAsyncThunk<IProduct, string>(
     }
 );
 
+export const productCreate = createAsyncThunk<void, ProductMutation,  {state: RootState}>('products/create', async (productMutation, {getState}) => {
+    const user = getState().users.user;
+    const formData = new FormData();
+    if (user) {
+      const keys = Object.keys(productMutation) as (keyof ProductMutation)[];
+      keys.forEach((key) => {
+        const value = productMutation[key];
+        if (value) {
+            formData.append(key, value);
+        }
+      });
+      
+      await axiosApi.post<IProduct>('/products', formData,  {headers: {'Authorization': `Bearer ${user.token}`}});
+    }
+});
 export const productDelete = createAsyncThunk<IProduct, string, {state: RootState}>(
     'products/deleteOne',
     async(id, {getState})=>{
